@@ -12,11 +12,11 @@ This is just an empty repository I've created to help me dockerize Laravel appli
 Essential services like Apache and cron service have already being activated so its pretty much plug and play.
 
 Steps to run below:
-1. Clone to you machine
+1. Clone to your machine
 2. Run composer update and composer install
 3. set php artisan key:generate
 4. Copy your .env details from .env to .env.example (or any name of your choice, just make sure to update it in the Dockerfile)
-5. Build with : docker build -t laravel-app .
+5. Build with: docker build -t laravel-app .
 6. Run with docker run -p 8000:80 laravel-app
 6. Check running containers: docker ps
 7. Stop container: docker stop container_id_or_name

@@ -39,9 +39,9 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 RUN a2enmod rewrite
 
 # Configure cron
-ADD cron /etc/cron.d/docker-repo-cron
-RUN chmod 0644 /etc/cron.d/docker-repo-cron
-RUN crontab /etc/cron.d/docker-repo-cron
+#ADD cron /etc/cron.d/card-expiry-cron
+#RUN chmod 0644 /etc/cron.d/card-expiry-cron
+#RUN crontab /etc/cron.d/card-expiry-cron
 RUN touch /var/log/cron.log
 
 # Script file copied into container.
