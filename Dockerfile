@@ -25,15 +25,19 @@ WORKDIR /var/www/html
 
 # Copy app files
 COPY . /var/www/html
-COPY .env.example /var/www/html/.env    
+COPY .env.dev /var/www/html/.env    
 COPY apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+# Adjust PHP memory_limit
+RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory.ini
+
 
 # Install dependencies
 RUN composer install --prefer-dist --no-interaction
 
 # Set file permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache 
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache 
 
 # Enable Apache modules
 RUN a2enmod rewrite
@@ -65,4 +69,6 @@ RUN php artisan config:cache && \
 #CMD service cron start && apache2-foreground
 #CMD [ "cron", "-f" ]
 #ENTRYPOINT [ "cron", "-f" ]
-CMD ["/bin/bash", "-c", "service apache2 start && /start.sh && chmod 644 /etc/cron.d/docker-repo-cron && cron && tail -f /var/log/cron.log"]
+#CMD ["/bin/bash", "-c", "service apache2 start && /start.sh && cron && tail -f /var/log/cron.log"]
+CMD ["/bin/bash", "-c", "service apache2 start && /start.sh && cron && php artisan queue:work --daemon --tries=3 && tail -f /var/log/cron.log"]
+
