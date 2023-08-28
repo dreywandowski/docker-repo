@@ -25,7 +25,7 @@ WORKDIR /var/www/html
 
 # Copy app files
 COPY . /var/www/html
-COPY .env.dev /var/www/html/.env    
+COPY .env /var/www/html/.env    
 COPY apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # Adjust PHP memory_limit
@@ -43,9 +43,6 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 RUN a2enmod rewrite
 
 # Configure cron
-#ADD cron /etc/cron.d/card-expiry-cron
-#RUN chmod 0644 /etc/cron.d/card-expiry-cron
-#RUN crontab /etc/cron.d/card-expiry-cron
 RUN touch /var/log/cron.log
 
 # Script file copied into container.
@@ -65,10 +62,6 @@ RUN php artisan config:cache && \
     php artisan route:cache && \
     php artisan key:generate 
 
-# Start Apache server and cron service
-#CMD service cron start && apache2-foreground
-#CMD [ "cron", "-f" ]
-#ENTRYPOINT [ "cron", "-f" ]
-#CMD ["/bin/bash", "-c", "service apache2 start && /start.sh && cron && tail -f /var/log/cron.log"]
+# Start Apache server, queue worker and cron service
 CMD ["/bin/bash", "-c", "service apache2 start && /start.sh && cron && php artisan queue:work --daemon --tries=3 && tail -f /var/log/cron.log"]
 
