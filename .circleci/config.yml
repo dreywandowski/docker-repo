@@ -1,0 +1,68 @@
+version: 2.1
+orbs:
+  docker: circleci/docker@2.1.2
+jobs:
+  build-and-test:
+    description: Setup laravel application and run tests
+    docker:
+      # Specify the version you desire here
+      - image: cimg/php:8.0-browsers
+
+    steps:
+      - checkout
+
+      - run:
+          name: "Prepare environment"
+          command: |
+            sudo apt update
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: "Install dependencies"
+          command: composer install -n --prefer-dist
+
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+
+      - run:
+          name: "Create .env file and generate app key"
+          command: |
+            mv .env .env
+            php artisan key:generate
+
+      - run:
+          name: "Run tests"
+          command: php vendor/bin/phpunit
+
+  build-docker-image:
+    executor:
+      name: docker/docker
+      tag: "3.6"
+    steps:
+      - checkout
+      - docker/install-docker-tools
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+      - run:
+          name: "Build and push Docker image"
+          command: |
+            docker build -t adura.azurecr.io/docker-repo:latest .
+            docker login -u adura -p kZ4/Vfp/Jml1y0918RRculvuL0cg++W14Pk8AUJWGM+ACRACP4i/ adura.azurecr.io/docker-repo:latest
+            docker push adura.azurecr.io/docker-repo:latest
+
+workflows:
+  test-and-deploy:
+    jobs:
+      - build-and-test
+      - build-docker-image:
+          requires:
+            - build-and-test
