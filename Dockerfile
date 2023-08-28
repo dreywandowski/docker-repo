@@ -19,7 +19,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 #Install MySQL driver
 RUN docker-php-ext-install pdo_mysql
 
-
 # Set working directory
 WORKDIR /var/www/html
 
