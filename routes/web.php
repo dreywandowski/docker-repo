@@ -17,4 +17,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('health-check',[HealthCheckController::class , 'health-check']); 
+Route::get('health-check',[HealthCheckController::class , 'healthCheck']); 
