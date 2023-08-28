@@ -25,7 +25,7 @@ WORKDIR /var/www/html
 
 # Copy app files
 COPY . /var/www/html
-COPY .env /var/www/html/.env    
+COPY .env.example /var/www/html/.env    
 COPY apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # Adjust PHP memory_limit
