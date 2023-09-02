@@ -25,7 +25,7 @@ RUN apt-get install -y supervisor
 # Create a Supervisor configuration directory
 RUN mkdir -p /etc/supervisor/conf.d
 
-# Copy Supervisor configuration file into the container
+# Copy Supervisor configuration file into the container directory
 COPY supervisor/docker-worker.conf /etc/supervisor/conf.d/docker-worker.conf
 
 
