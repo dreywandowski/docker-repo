@@ -19,6 +19,16 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 #Install MySQL driver
 RUN docker-php-ext-install pdo_mysql
 
+# Install Supervisor
+RUN apt-get install -y supervisor
+
+# Create a Supervisor configuration directory
+RUN mkdir -p /etc/supervisor/conf.d
+
+# Copy Supervisor configuration file into the container
+COPY supervisor/docker-worker.conf /etc/supervisor/conf.d/docker-worker.conf
+
+
 # Set working directory
 WORKDIR /var/www/html
 
