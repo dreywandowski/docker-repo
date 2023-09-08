@@ -27,7 +27,7 @@ RUN mkdir -p /etc/supervisor/conf.d
 
 # Copy Supervisor configuration file into the container directory
 COPY supervisor/docker-worker.conf /etc/supervisor/conf.d/docker-worker.conf
-
+#COPY supervisor/cron-service.conf /etc/supervisor/conf.d/cron-service.conf
 
 # Set working directory
 WORKDIR /var/www/html
@@ -72,5 +72,5 @@ RUN php artisan config:cache && \
     php artisan key:generate 
 
 # Start Apache server, queue worker and cron service
-CMD ["/bin/bash", "-c", "service apache2 start && /start.sh && cron && php artisan queue:work --daemon --tries=3 && tail -f /var/log/cron.log"]
+CMD ["/bin/bash", "-c", "service apache2 start && /start.sh && cron && supervisord -n"]
 
