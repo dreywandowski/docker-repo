@@ -58,7 +58,7 @@ jobs:
             echo ${DOCKER_USERNAME}
             echo ${DOCKER_PASS}
             docker build -t adura.azurecr.io/docker-repo:latest .
-            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASS}/ adura.azurecr.io/docker-repo:latest
+            docker login -u adura -p kZ4/Vfp/Jml1y0918RRculvuL0cg++W14Pk8AUJWGM+ACRACP4i/ adura.azurecr.io/docker-repo:latest
             docker push adura.azurecr.io/docker-repo:latest
 
 workflows:
