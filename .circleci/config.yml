@@ -55,9 +55,9 @@ jobs:
       - run:
           name: "Build and push Docker image"
           command: |
-            docker build -t "`$ secrets.HOST `" .
-            docker login -u "`$ secrets.USER `" -p "`$ secrets.PASSWORD `"/ "`$ secrets.HOST `"
-            docker push "`$ secrets.HOST `"
+            docker build -t adura.azurecr.io/docker-repo:latest .
+            docker login -u "`$ secrets.USER `" -p "`$ secrets.PASSWORD `"/ adura.azurecr.io/docker-repo:latest
+            docker push adura.azurecr.io/docker-repo:latest
 
 workflows:
   test-and-deploy:
